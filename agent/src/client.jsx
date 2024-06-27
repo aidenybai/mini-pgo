@@ -7,6 +7,17 @@ const DO_NOT_CHECK = Symbol('DO_NOT_CHECK');
 
 export const isDifferent = (prev, next) => {
   if (prev && next && typeof prev === 'object' && typeof next === 'object') {
+    if (Array.isArray(prev) && Array.isArray(next)) {
+      if (prev.length !== next.length) {
+        return true;
+      }
+      for (let i = 0; i < prev.length; i++) {
+        if (isDifferent(prev[i], next[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
     for (const key in { ...prev, ...next }) {
       if (isDifferent(prev[key], next[key])) {
         return true;
