@@ -2,7 +2,6 @@ import * as t from '@babel/types';
 import { Options } from './types';
 import { transformAsync, type PluginObj } from '@babel/core';
 import type { SourceLocation } from '@babel/types';
-import { createServer } from './server';
 
 const isCapitalized = (str: string) => str[0] === str[0].toUpperCase();
 
@@ -24,7 +23,7 @@ const convertObjectPatternToExpression = (node: t.ObjectPattern) => {
 
 const capture = '__SECRET_INTERNALS__.capture';
 const Capture = '__SECRET_INTERNALS__.Capture';
-const babelPlugin = (options: Options = {}): PluginObj => {
+const babelPlugin = (_: any, options: Options = {}): PluginObj => {
   const fileName = options.id || '';
 
   return {
@@ -67,20 +66,37 @@ const babelPlugin = (options: Options = {}): PluginObj => {
                 }
               }
 
+              // get key from path.node.openingElement
+
+              let keyAttribute: t.JSXAttribute | undefined;
+
+              for (const attr of path.node.openingElement.attributes) {
+                if (t.isJSXAttribute(attr) && attr.name.name === 'key') {
+                  keyAttribute = attr;
+                  break;
+                }
+              }
+
               path.replaceWith(
                 t.jsxElement(
-                  t.jsxOpeningElement(t.jsxIdentifier(Capture), [
-                    t.jsxAttribute(
-                      t.jsxIdentifier('id'),
-                      t.jsxExpressionContainer(t.stringLiteral(fileName))
-                    ),
-                    t.jsxAttribute(
-                      t.jsxIdentifier('loc'),
-                      t.jsxExpressionContainer(
-                        t.stringLiteral(serializeSourceLocation(path.node.loc))
-                      )
-                    ),
-                  ]),
+                  t.jsxOpeningElement(
+                    t.jsxIdentifier(Capture),
+                    [
+                      t.jsxAttribute(
+                        t.jsxIdentifier('id'),
+                        t.jsxExpressionContainer(t.stringLiteral(fileName))
+                      ),
+                      t.jsxAttribute(
+                        t.jsxIdentifier('loc'),
+                        t.jsxExpressionContainer(
+                          t.stringLiteral(
+                            serializeSourceLocation(path.node.loc)
+                          )
+                        )
+                      ),
+                      keyAttribute,
+                    ].filter(Boolean) as t.JSXAttribute[]
+                  ),
                   t.jsxClosingElement(t.jsxIdentifier(Capture)),
                   [path.node]
                 )
@@ -95,6 +111,7 @@ const babelPlugin = (options: Options = {}): PluginObj => {
             ) {
               path.replaceWith(
                 t.callExpression(t.identifier(capture), [
+                  t.stringLiteral(fileName),
                   t.stringLiteral(serializeSourceLocation(path.node.loc)),
                   path.node,
                 ])
@@ -109,7 +126,6 @@ const babelPlugin = (options: Options = {}): PluginObj => {
 };
 
 export const vitePlugin = () => {
-  createServer();
   const includeRE = /\.(jsx)$/;
   return {
     name: 'mini-pgo',

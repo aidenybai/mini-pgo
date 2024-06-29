@@ -68,10 +68,18 @@ export const Capture = ({ loc, id, children }) => {
 };
 
 export const transport = () => {
-  const body = JSON.stringify({
-    data,
-    fileMap,
-  });
+  const body = JSON.stringify(
+    {
+      data,
+      fileMap,
+    },
+    (key, value) => {
+      if (key === 'prev') {
+        return undefined;
+      }
+      return value;
+    }
+  );
   data = {};
   fileMap = {};
   return fetch('http://localhost:6900/data', {
@@ -82,6 +90,8 @@ export const transport = () => {
     body,
   });
 };
+
+setTimeout(transport, 1000);
 
 globalThis.__SECRET_INTERNALS__ = {
   data,
