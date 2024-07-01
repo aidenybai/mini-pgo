@@ -1,12 +1,23 @@
-### Reading:
+## Reading list:
+
+### React perf optimization
 
 - https://gist.github.com/aidenybai/3b67f9907762725d6031b433445a288b
+- https://www.figma.com/board/H7agLtzkyNhMx4YqBKmBiE/React-Debugging-Flowchart-(Smashing%2C-Jun-2023)?node-id=0-1&t=fBUsMVmRPsRZ46ni-0
+- https://github.com/coryhouse/reactjsconsulting/issues/77
+- https://3perf.com/content/ (library of content)
+- https://github.com/kurtextrem/awesome-performance-patches
+
+
+### Million Lint internals
+
 - https://million.dev/lint
 - https://old.million.dev/blog/lint
-- https://github.com/millionjs/million-lint-benchmark
-- https://www.figma.com/board/H7agLtzkyNhMx4YqBKmBiE/React-Debugging-Flowchart-(Smashing%2C-Jun-2023)?node-id=0-1&t=fBUsMVmRPsRZ46ni-0
+- https://github.com/millionjs/million-lint-benchmark (THIS CONTAINS ANSWERS TO https://github.com/3perf/react-workshop-ra)
 
-### Setup
+## Task
+
+## Setup
 
 ```bash
 npm i -g pnpm
@@ -14,7 +25,7 @@ npm i -g pnpm
 
 Open two terminals:
 
-#### Terminal 1:
+### Terminal 1:
 
 ```bash
 pnpm i
