@@ -7,6 +7,7 @@
 - https://github.com/coryhouse/reactjsconsulting/issues/77
 - https://3perf.com/content/ (library of content)
 - https://github.com/kurtextrem/awesome-performance-patches
+- https://github.com/epicweb-dev/react-performance
 
 
 ### Million Lint internals
